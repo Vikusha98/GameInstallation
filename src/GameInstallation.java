@@ -7,80 +7,79 @@ import java.util.List;
 public class GameInstallation {
     public static void main(String[] args) {
         String gamesFolderPath = "C:/Users/victo/Desktop/Games";
-        List<String> subfolders = Arrays.asList("src", "res", "savegames", "temp");
+        List<String> directoriesToCreate = Arrays.asList(
+                "C:/Users/victo/Desktop/Games/src",
+                "C:/Users/victo/Desktop/Games/res",
+                "C:/Users/victo/Desktop/Games/savegames",
+                "C:/Users/victo/Desktop/Games/temp"
+        );
 
-        File gamesFolder = new File(gamesFolderPath);
-        boolean isGamesFolderCreated = createFolder(gamesFolder);
+        createDirectories(directoriesToCreate);
 
-        StringBuilder logBuilder = new StringBuilder();
-
-        logStatus(isGamesFolderCreated, "Папка Games", "создана", "Ошибка при создании папки Games", logBuilder);
-
-        for (String subfolder : subfolders) {
-            File folder = new File(gamesFolderPath + "/" + subfolder);
-            boolean isFolderCreated = createFolder(folder);
-            logStatus(isFolderCreated, "Папка " + subfolder, "создана", "Ошибка при создании папки " + subfolder, logBuilder);
-        }
-
-        createSubFoldersAndFiles(gamesFolderPath, logBuilder);
-
-        try {
-            FileWriter writer = new FileWriter(gamesFolderPath + "/temp/temp.txt");
-            writer.write(logBuilder.toString());
-            writer.close();
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static boolean createFolder(File folder) {
-        return folder.mkdir();
-    }
-
-    private static boolean createFile(File file) {
-        try {
-            return file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private static void logStatus(boolean condition, String itemName, String successMessage, String errorMessage, StringBuilder logBuilder) {
-        if (condition) {
-            logBuilder.append(itemName).append(" успешно ").append(successMessage).append("\n");
-        } else {
-            logBuilder.append(errorMessage).append("\n");
-        }
-    }
-
-    private static void createSubFoldersAndFiles(String gamesFolderPath, StringBuilder logBuilder) {
         List<String> subFoldersInSrc = Arrays.asList("main", "test");
         List<String> subFoldersInRes = Arrays.asList("drawables", "vectors", "icons");
 
-        File srcFolder = new File(gamesFolderPath + "/src");
-        createFolder(srcFolder);
-        for (String subFolder : subFoldersInSrc) {
-            File sub = new File(srcFolder.getPath() + "/" + subFolder);
-            boolean isSubFolderCreated = createFolder(sub);
-            logStatus(isSubFolderCreated, "Папка " + subFolder + " в src", "создана", "Ошибка при создании папки " + subFolder + " в src", logBuilder);
+        createSubDirectories(gamesFolderPath + "/src", subFoldersInSrc);
+        createSubDirectories(gamesFolderPath + "/res", subFoldersInRes);
+
+        createFiles(gamesFolderPath);
+
+        StringBuilder logBuilder = new StringBuilder("Лог создания директорий и файлов:\n");
+        logBuilder.append("Все директории и файлы успешно созданы.");
+
+        writeLogToFile(gamesFolderPath + "/temp/temp.txt", logBuilder.toString());
+    }
+
+    private static void createDirectories(List<String> directories) {
+        for (String directory : directories) {
+            File folder = new File(directory);
+            boolean isFolderCreated = folder.mkdir();
+            logStatus(isFolderCreated, "Директория " + directory, "создана", "Ошибка при создании директории " + directory);
         }
+    }
 
-        File resFolder = new File(gamesFolderPath + "/res");
-        createFolder(resFolder);
-        for (String subFolder : subFoldersInRes) {
-            File sub = new File(resFolder.getPath() + "/" + subFolder);
-            boolean isSubFolderCreated = createFolder(sub);
-            logStatus(isSubFolderCreated, "Папка " + subFolder + " в res", "создана", "Ошибка при создании папки " + subFolder + " в res", logBuilder);
+    private static void createSubDirectories(String parentDirectory, List<String> subDirectories) {
+        for (String subDirectory : subDirectories) {
+            String directoryPath = parentDirectory + "/" + subDirectory;
+            File folder = new File(directoryPath);
+            boolean isFolderCreated = folder.mkdir();
+            logStatus(isFolderCreated, "Директория " + directoryPath, "создана", "Ошибка при создании директории " + directoryPath);
         }
+    }
 
-        File mainJavaFile = new File(gamesFolderPath + "/src/main/Main.java");
-        File utilsJavaFile = new File(gamesFolderPath + "/src/main/Utils.java");
-        boolean areFilesCreated = createFile(mainJavaFile) && createFile(utilsJavaFile);
-        logStatus(areFilesCreated, "Файлы Main.java и Utils.java в src/main", "созданы", "Ошибка при создании файлов Main.java и Utils.java в src/main", logBuilder);
+    private static void createFiles(String gamesFolderPath) {
+        List<String> filesToCreate = Arrays.asList(
+                gamesFolderPath + "/src/main/Main.java",
+                gamesFolderPath + "/src/main/Utils.java",
+                gamesFolderPath + "/temp/temp.txt"
+        );
 
-        File tempTxtFile = new File(gamesFolderPath + "/temp/temp.txt");
-        boolean isTempTxtFileCreated = createFile(tempTxtFile);
-        logStatus(isTempTxtFileCreated, "Файл temp.txt", "создан", "Ошибка при создании файла temp.txt", logBuilder);
+        for (String file : filesToCreate) {
+            File newFile = new File(file);
+            try {
+                boolean isFileCreated = newFile.createNewFile();
+                logStatus(isFileCreated, "Файл " + file, "создан", "Ошибка при создании файла " + file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void writeLogToFile(String filePath, String log) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(log);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void logStatus(boolean condition, String itemName, String successMessage, String errorMessage) {
+        if (condition) {
+            System.out.println(itemName + " " + successMessage);
+        } else {
+            System.out.println(errorMessage);
+        }
     }
 }
