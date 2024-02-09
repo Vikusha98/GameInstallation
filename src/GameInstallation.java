@@ -5,63 +5,57 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameInstallation {
+    static StringBuilder builder = new StringBuilder();
+
     public static void main(String[] args) {
-        String gamesFolderPath = "C:/Users/victo/Desktop/Games";
         List<String> directoriesToCreate = Arrays.asList(
                 "C:/Users/victo/Desktop/Games/src",
                 "C:/Users/victo/Desktop/Games/res",
                 "C:/Users/victo/Desktop/Games/savegames",
-                "C:/Users/victo/Desktop/Games/temp"
+                "C:/Users/victo/Desktop/Games/temp",
+                "C:/Users/victo/Desktop/Games/drawables",
+                "C:/Users/victo/Desktop/Games/icons",
+                "C:/Users/victo/Desktop/Games/vectors",
+                "C:/Users/victo/Desktop/Games/main",
+                "C:/Users/victo/Desktop/Games/test"
         );
 
-        createDirectories(directoriesToCreate);
-
-        List<String> subFoldersInSrc = Arrays.asList("main", "test");
-        List<String> subFoldersInRes = Arrays.asList("drawables", "vectors", "icons");
-
-        createSubDirectories(gamesFolderPath + "/src", subFoldersInSrc);
-        createSubDirectories(gamesFolderPath + "/res", subFoldersInRes);
-
-        createFiles(gamesFolderPath);
-
-        StringBuilder logBuilder = new StringBuilder("Лог создания директорий и файлов:\n");
-        logBuilder.append("Все директории и файлы успешно созданы.");
-
-        writeLogToFile(gamesFolderPath + "/temp/temp.txt", logBuilder.toString());
-    }
-
-    private static void createDirectories(List<String> directories) {
-        for (String directory : directories) {
-            File folder = new File(directory);
-            boolean isFolderCreated = folder.mkdir();
-            logStatus(isFolderCreated, "Директория " + directory, "создана", "Ошибка при создании директории " + directory);
+        for (String directory : directoriesToCreate) {
+            createDirectory(directory);
         }
-    }
 
-    private static void createSubDirectories(String parentDirectory, List<String> subDirectories) {
-        for (String subDirectory : subDirectories) {
-            String directoryPath = parentDirectory + "/" + subDirectory;
-            File folder = new File(directoryPath);
-            boolean isFolderCreated = folder.mkdir();
-            logStatus(isFolderCreated, "Директория " + directoryPath, "создана", "Ошибка при создании директории " + directoryPath);
-        }
-    }
-
-    private static void createFiles(String gamesFolderPath) {
         List<String> filesToCreate = Arrays.asList(
-                gamesFolderPath + "/src/main/Main.java",
-                gamesFolderPath + "/src/main/Utils.java",
-                gamesFolderPath + "/temp/temp.txt"
+                "C:/Users/victo/Desktop/Games/src/main/Main.java",
+                "C:/Users/victo/Desktop/Games/src/main/Utils.java",
+                "C:/Users/victo/Desktop/Games/temp/temp.txt"
         );
 
         for (String file : filesToCreate) {
-            File newFile = new File(file);
-            try {
-                boolean isFileCreated = newFile.createNewFile();
-                logStatus(isFileCreated, "Файл " + file, "создан", "Ошибка при создании файла " + file);
-            } catch (IOException e) {
-                e.printStackTrace();
+            createFile(file);
+        }
+
+        writeLogToFile("C:/Users/victo/Desktop/Games/temp/temp.txt", builder.toString());
+    }
+
+    public static void createDirectory(String path) {
+        File folder = new File(path);
+        if (folder.mkdir()) {
+            builder.append("Директория " + path + " создана\n");
+        } else {
+            builder.append("Ошибка создания директории " + path + "\n");
+        }
+    }
+
+    public static void createFile(String path) {
+        File newFile = new File(path);
+        try {
+            if (newFile.createNewFile()) {
+                builder.append("Файл " + path + " создан\n");
+            } else {
+                builder.append("Ошибка создания файла " + path + "\n");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -72,14 +66,6 @@ public class GameInstallation {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static void logStatus(boolean condition, String itemName, String successMessage, String errorMessage) {
-        if (condition) {
-            System.out.println(itemName + " " + successMessage);
-        } else {
-            System.out.println(errorMessage);
         }
     }
 }
