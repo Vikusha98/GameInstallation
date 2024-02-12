@@ -50,7 +50,7 @@ public class GameInstallation {
         File newFile = new File(path);
         try {
             if (newFile.createNewFile()) {
-                builder.append("Файл " + path + " создан\n");
+                builder.append(" Файл " + path + " создан\n");
             } else {
                 builder.append("Ошибка создания файла " + path + "\n");
             }
