@@ -13,11 +13,11 @@ public class GameInstallation {
                 "C:/Users/victo/Desktop/Games/res",
                 "C:/Users/victo/Desktop/Games/savegames",
                 "C:/Users/victo/Desktop/Games/temp",
-                "C:/Users/victo/Desktop/Games/drawables",
-                "C:/Users/victo/Desktop/Games/icons",
-                "C:/Users/victo/Desktop/Games/vectors",
-                "C:/Users/victo/Desktop/Games/main",
-                "C:/Users/victo/Desktop/Games/test"
+                "C:/Users/victo/Desktop/Games/src/main",
+                "C:/Users/victo/Desktop/Games/src/test",
+                "C:/Users/victo/Desktop/Games/res/drawables",
+                "C:/Users/victo/Desktop/Games/res/vectors",
+                "C:/Users/victo/Desktop/Games/res/icons"
         );
 
         for (String directory : directoriesToCreate) {
@@ -58,14 +58,3 @@ public class GameInstallation {
             e.printStackTrace();
         }
     }
-
-    private static void writeLogToFile(String filePath, String log) {
-        try {
-            FileWriter writer = new FileWriter(filePath);
-            writer.write(log);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-}
