@@ -58,3 +58,15 @@ public class GameInstallation {
             e.printStackTrace();
         }
     }
+
+    public static void writeLogToFile(String filePath, String log) {
+        try {
+            FileWriter writer = new FileWriter(filePath);
+            writer.write(log);
+            writer.close;
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
